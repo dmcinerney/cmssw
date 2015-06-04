@@ -146,7 +146,6 @@ int visualizationTracker(float minZ, float maxZ, float minY, float maxY, float t
     c->SetTheta(theta);
     c->SetPhi(phi);
     top->Draw();
-    string str = string("i") + to_string(_i) + string(".gif");
 
 //--- putting words on canvas...
     bool with0T = true;
@@ -191,7 +190,9 @@ int visualizationTracker(float minZ, float maxZ, float minY, float maxY, float t
     text3->SetTextAngle(90);
     pt3->Draw();
 
+    string str = string("i") + to_string(_i) + string(".gif");
     c->SaveAs(TString(str));
+    gSystem->Exec(TString("mv "+str+" images/"+str));
     delete c;
     cout << "Created image " << str << endl;
     return 0;
@@ -236,29 +237,49 @@ void getMinMax(float & minZ, float & maxZ, float & minY, float & maxY) {
     cout << maxZ << endl;
 }
 
-//prints string that is a unix command that merges gifs -- must use gifmerge (download at http://the-labs.com/GIFMerge/)
-void printGifMergeCommand(int start, int breakspot1, int breakspot2, int end) {
-    cout << "Gifmerge Command:" << endl;
-    cout << "./gifmerge -192,192,192 -l0 -5 ";
+//gets string that is a unix command that merges gifs using gifmerge (download at http://the-labs.com/GIFMerge/)
+string getGifMergeCommand(int start, int breakspot1, int breakspot2, int end) {
+    string str = "";
+    str += "./gifmerge -192,192,192 -l0 -5 ";
     for (int i = start; i < breakspot1; i++) {
-        cout << "i"+to_string(i)+".gif ";
+        str += "images/i"+to_string(i)+".gif ";
     }
-    cout << "-50 ";
+    str += "-50 ";
     for (int i = breakspot1; i < breakspot2; i++) {
-        cout << "i"+to_string(i)+".gif ";
+        str += "images/i"+to_string(i)+".gif ";
     }
-    cout << "-5 ";
+    str += "-5 ";
     for (int i = breakspot2; i < end-1; i++) {
-        cout << "i"+to_string(i)+".gif ";
+        str += "images/i"+to_string(i)+".gif ";
     }
-    cout << "-100 i"+to_string(end-1)+".gif > animation.gif" << endl;
+    str += "-100 images/i"+to_string(end-1)+".gif > animation.gif";
+    return str;
+}
+
+//gets string that is a unix command that merges gifs using ImageMagick
+string getConvertComand(int start, int breakspot1, int breakspot2, int end) {
+    string str = "";
+    str += "convert -loop 0 -delay 5 ";
+    for (int i = start; i < breakspot1; i++) {
+        str += "images/i"+to_string(i)+".gif ";
+    }
+    str += "-delay 50 ";
+    for (int i = breakspot1; i < breakspot2; i++) {
+        str += "images/i"+to_string(i)+".gif ";
+    }
+    str += "-delay 5 ";
+    for (int i = breakspot2; i < end-1; i++) {
+        str += "images/i"+to_string(i)+".gif ";
+    }
+    str += "-delay 100 images/i"+to_string(end-1)+".gif   animation.gif";
+    return str;
 }
 
 void runVisualizer() {
     gErrorIgnoreLevel = kError;
     //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TFile *fin = TFile::Open( "radial_vs_normal.Comparison_commonTracker.root" );
+    TFile *fin = TFile::Open( "~/radial_vs_normal.Comparison_commonTracker.root" );
     //set subdetectors to see
     _subdetector1 = 1;
     _subdetector2 = 2;
@@ -267,9 +288,9 @@ void runVisualizer() {
     //translation scale factor
     _sclftr = 300;
     //module size scale factor
-    _sclfmodulesizex = .75;
-    _sclfmodulesizey = .75;
-    _sclfmodulesizez = .75;
+    _sclfmodulesizex = 1;
+    _sclfmodulesizey = 1;
+    _sclfmodulesizez = 1;
     //title
     _line1 = "";
     _line2 = "";
@@ -310,6 +331,8 @@ void runVisualizer() {
     int numincrements;
     getMinMax(minZ, maxZ, minY, maxY);
     
+    gSystem->mkdir("images");
+
     _i = 0;
     for (int i = 0; i < 90; i+=1, _i++) {
         visualizationTracker(minZ, maxZ, minY, maxY, i, 0);
@@ -330,8 +353,9 @@ void runVisualizer() {
     for (int i = 90; i >= 0; i-=1, _i++){
         visualizationTracker(minZ, maxZ, (minY + maxY) / 2 - 3, (minY + maxY) / 2 + 1, i, 0);
     }
-    printGifMergeCommand(0, start1, start2, _i);
-
     delete fin;
-}
 
+    //gSystem->Exec(TString(getGifMergeComand(0, start1, start2, _i)));
+    gSystem->Exec(TString(getConvertComand(0, start1, start2, _i)));
+	cout << "/" << endl;
+}
