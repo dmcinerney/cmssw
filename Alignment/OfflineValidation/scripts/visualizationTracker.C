@@ -43,26 +43,26 @@ string _line1, _line2, _line3;
 void getBeamVisuals(TGeoManager* geom, TGeoVolume* top, float minZ, float maxZ) {
     TGeoMaterial *matVacuum = new TGeoMaterial("Vacuum", 0,0,0);
     TGeoMedium *Vacuum = new TGeoMedium("Vacuum",1, matVacuum);
-    TGeoVolume *xyaxis = geom->MakeBox( "collpoint", Vacuum, 90., 90., 40. );
+    TGeoVolume *xyaxis = geom->MakeBox( "xyaxis", Vacuum, 90., 90., 40. );
 
     TGeoMaterial *matAl = new TGeoMaterial("Al", 26.98,13,2.7);
     TGeoMedium *Al = new TGeoMedium("Root Material",1, matAl);
-    TGeoVolume *line = geom->MakeTube( "BeamLine", Al, 0, .3, (maxZ - minZ) / 2 + 5);
+    //TGeoVolume *line = geom->MakeTube( "BeamLine", Al, 0, .3, (maxZ - minZ) / 2 + 5);
     TGeoVolume *xaxis = geom->MakeTube( "XAxis", Al, 0, .1, 30.);
     TGeoVolume *yaxis = geom->MakeTube( "YAxis", Al, 0, .1, 30.);
-    TGeoVolume *pipe = geom->MakeTube( "BeamPipe", Al, 2.9, 3., (maxZ - minZ) / 2 + 5);
-    line->SetLineColor(kRed);
+    //TGeoVolume *pipe = geom->MakeTube( "BeamPipe", Al, 2.9, 3., (maxZ - minZ) / 2 + 5);
+    //line->SetLineColor(kRed);
     xaxis->SetLineColor(kBlue);
     yaxis->SetLineColor(kBlue);
-    pipe->SetLineColor(kBlack);
+    //pipe->SetLineColor(kBlack);
 
     xyaxis->AddNode(xaxis, 1, new TGeoRotation( "rtyz", 0, 90, 0));
     xyaxis->AddNode(yaxis, 1, new TGeoRotation( "rtxz", 90, 90, 0));
     
     TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(0,0, (maxZ + minZ)/2), *new TGeoRotation());
-    TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(0,0, (maxZ + minZ)/2), *new TGeoRotation());
-    top->AddNode( pipe, 1, pipecenter);
-    top->AddNode( line, 1, linecenter);
+    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(0,0, (maxZ + minZ)/2), *new TGeoRotation());
+    //top->AddNode( pipe, 1, pipecenter);
+    //top->AddNode( line, 1, linecenter);
     top->AddNode( xyaxis, 1, pipecenter);
 }
 
