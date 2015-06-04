@@ -257,7 +257,7 @@ string getGifMergeCommand(int start, int breakspot1, int breakspot2, int end) {
 }
 
 //gets string that is a unix command that merges gifs using ImageMagick
-string getConvertComand(int start, int breakspot1, int breakspot2, int end) {
+string getConvertCommand(int start, int breakspot1, int breakspot2, int end) {
     string str = "";
     str += "convert -loop 0 -delay 5 ";
     for (int i = start; i < breakspot1; i++) {
@@ -355,7 +355,7 @@ void runVisualizer() {
     }
     delete fin;
 
-    //gSystem->Exec(TString(getGifMergeComand(0, start1, start2, _i)));
-    gSystem->Exec(TString(getConvertComand(0, start1, start2, _i)));
+    //gSystem->Exec(TString(getGifMergeCommand(0, start1, start2, _i)));
+    gSystem->Exec(TString(getConvertCommand(0, start1, start2, _i)));
 	cout << "/" << endl;
 }
