@@ -294,8 +294,8 @@ void runVisualizer() {
     //title
     _line1 = "";
     _line2 = "";
-    _line3 = "";
 //------------------------------End of ONLY NEEDED INPUTS-------------------------------//
+    _line3 = "Translational Scale Factor: " + to_string(_sclftr);
     //++++++++++++++++++++ Read in tree ++++++++++++++++++++//
     _inTree = (TTree*) fin->Get("alignTree");
     _nEntries = _inTree->GetEntries();
