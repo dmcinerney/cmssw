@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 //using namespace ROOT::Math;
 
@@ -31,14 +32,56 @@ int _i;
 
 // global variables
 TTree* _inTree;
-float _sclftr;
-float _sclfrt;
+int _sclftr;
+int _sclfrt;
 float _sclfmodulesizex;
 float _sclfmodulesizey;
 float _sclfmodulesizez;
-float _subdetector1;
-float _subdetector2;
+int _subdetector1;
+int _subdetector2;
+string _outputFileName;
 string _line1, _line2, _line3;
+
+TTree *t;
+float zval;
+vector<int> vz;
+
+bool iszilessthanzj(int i, int j)
+{
+    return vz[i] < vz[j];
+}
+
+void sortbyz(TString infile)
+{
+    TFile *f = TFile::Open(infile);
+    t = (TTree*)f->Get("alignTree");
+    t->SetBranchAddress("z", &zval);
+
+    TString outfile = infile.ReplaceAll(".root","_sorted.root");
+    TFile *newf = TFile::Open(outfile, "RECREATE");
+    TTree *newt = t->CloneTree(0);
+
+    vector<int> v;
+    vz.clear();
+    int length = t->GetEntries();
+    for (int i = 0; i < length; i++)
+    {
+        v.push_back(i);
+
+        t->GetEntry(i);
+        vz.push_back(zval);
+    }
+
+    sort(v.begin(), v.end(), iszilessthanzj);
+
+    for (int i = 0; i < length; i++)
+    {
+        t->GetEntry(v[i]);
+        newt->Fill();
+    }
+    newt->Write();
+    delete newf;
+}
 
 void getBeamVisuals(TGeoManager* geom, TGeoVolume* top, float minZ, float maxZ) {
     TGeoMaterial *matVacuum = new TGeoMaterial("Vacuum", 0,0,0);
@@ -252,7 +295,7 @@ string getGifMergeCommand(int start, int breakspot1, int breakspot2, int end) {
     for (int i = breakspot2; i < end-1; i++) {
         str += "images/i"+to_string(i)+".gif ";
     }
-    str += "-100 images/i"+to_string(end-1)+".gif > animation.gif";
+    str += "-100 images/i"+to_string(end-1)+".gif > "+_outputFileName+".gif";
     return str;
 }
 
@@ -271,7 +314,7 @@ string getConvertCommand(int start, int breakspot1, int breakspot2, int end) {
     for (int i = breakspot2; i < end-1; i++) {
         str += "images/i"+to_string(i)+".gif ";
     }
-    str += "-delay 100 images/i"+to_string(end-1)+".gif   animation.gif";
+    str += "-delay 100 images/i"+to_string(end-1)+".gif   "+_outputFileName+".gif";
     return str;
 }
 
@@ -279,14 +322,16 @@ void runVisualizer() {
     gErrorIgnoreLevel = kError;
     //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TFile *fin = TFile::Open( "~/radial_vs_normal.Comparison_commonTracker.root" );
+    TString inputFileName = "~/radial_vs_normal.Comparison_commonTracker.root";
+    //output file name
+    _outputFileName = "animation";
     //set subdetectors to see
     _subdetector1 = 1;
     _subdetector2 = 2;
-    //rotation scale factor
-    _sclfrt = 1;
     //translation scale factor
     _sclftr = 300;
+    //rotation scale factor
+    _sclfrt = 1;
     //module size scale factor
     _sclfmodulesizex = 1;
     _sclfmodulesizey = 1;
@@ -295,7 +340,9 @@ void runVisualizer() {
     _line1 = "";
     _line2 = "";
 //------------------------------End of ONLY NEEDED INPUTS-------------------------------//
-    _line3 = "Translational Scale Factor: " + to_string(_sclftr);
+    sortbyz( inputFileName );
+    TFile *fin = TFile::Open( inputFileName.ReplaceAll(".root", "_sorted.root") );
+    _line3 = Form("Translational Scale Factor: %i",_sclftr);
     //++++++++++++++++++++ Read in tree ++++++++++++++++++++//
     _inTree = (TTree*) fin->Get("alignTree");
     _nEntries = _inTree->GetEntries();
@@ -357,5 +404,8 @@ void runVisualizer() {
 
     //gSystem->Exec(TString(getGifMergeCommand(0, start1, start2, _i)));
     gSystem->Exec(TString(getConvertCommand(0, start1, start2, _i)));
-	cout << "/" << endl;
+    cout << "images merged." << endl;
+    gSystem->Exec(TString("convert "+_outputFileName+".gif -rotate 90 "+_outputFileName+"_rotated.gif"));
+    cout << "images rotated." << endl;
 }
+
