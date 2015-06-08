@@ -41,10 +41,9 @@ int _subdetector1;
 int _subdetector2;
 string _outputFileName;
 string _line1, _line2, _line3;
-int _pipexcoord;
-int _pipeycoord;
-int _linexcoord;
-int _lineycoord;
+float _piperadius;
+float _pipexcoord, _pipeycoord;
+float _linexcoord, _lineycoord;
 
 TTree *t;
 float zval;
@@ -97,7 +96,7 @@ void getBeamVisuals(TGeoManager* geom, TGeoVolume* top, float minZ, float maxZ) 
     //TGeoVolume *line = geom->MakeTube( "BeamLine", Al, 0, .3, (maxZ - minZ) / 2 + 5);
     TGeoVolume *xaxis = geom->MakeTube( "XAxis", Al, 0, .1, 30.);
     TGeoVolume *yaxis = geom->MakeTube( "YAxis", Al, 0, .1, 30.);
-    //TGeoVolume *pipe = geom->MakeTube( "BeamPipe", Al, 2.9, 3., (maxZ - minZ) / 2 + 5);
+    //TGeoVolume *pipe = geom->MakeTube( "BeamPipe", Al, _piperadius-.05, _piperadius+.05, (maxZ - minZ) / 2 + 5);
     //line->SetLineColor(kRed);
     xaxis->SetLineColor(kBlue);
     yaxis->SetLineColor(kBlue);
@@ -326,7 +325,7 @@ void runVisualizer() {
     gErrorIgnoreLevel = kError;
     //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TString inputFileName = "radial_vs_normal.Comparison_commonTracker.root";
+    TString inputFileName = "~/radial_vs_normal.Comparison_commonTracker.root";
     //output file name
     _outputFileName = "animation";
     //title
@@ -343,6 +342,8 @@ void runVisualizer() {
     _sclfmodulesizex = 1;
     _sclfmodulesizey = 1;
     _sclfmodulesizez = 1;
+    //beam pipe radius
+    _piperadius = 2.25;
     //beam pipe xy coordinates
     _pipexcoord = 0;
     _pipeycoord = 0;
