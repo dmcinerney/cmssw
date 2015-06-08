@@ -41,6 +41,10 @@ int _subdetector1;
 int _subdetector2;
 string _outputFileName;
 string _line1, _line2, _line3;
+int _pipexcoord;
+int _pipeycoord;
+int _linexcoord;
+int _lineycoord;
 
 TTree *t;
 float zval;
@@ -102,8 +106,8 @@ void getBeamVisuals(TGeoManager* geom, TGeoVolume* top, float minZ, float maxZ) 
     xyaxis->AddNode(xaxis, 1, new TGeoRotation( "rtyz", 0, 90, 0));
     xyaxis->AddNode(yaxis, 1, new TGeoRotation( "rtxz", 90, 90, 0));
     
-    TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(0,0, (maxZ + minZ)/2), *new TGeoRotation());
-    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(0,0, (maxZ + minZ)/2), *new TGeoRotation());
+    TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(_pipeycoord, _pipeycoord, (maxZ + minZ)/2), *new TGeoRotation());
+    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(_linexcoord, _lineycoord, (maxZ + minZ)/2), *new TGeoRotation());
     //top->AddNode( pipe, 1, pipecenter);
     //top->AddNode( line, 1, linecenter);
     top->AddNode( xyaxis, 1, pipecenter);
@@ -322,9 +326,12 @@ void runVisualizer() {
     gErrorIgnoreLevel = kError;
     //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TString inputFileName = "~/radial_vs_normal.Comparison_commonTracker.root";
+    TString inputFileName = "radial_vs_normal.Comparison_commonTracker.root";
     //output file name
     _outputFileName = "animation";
+    //title
+    _line1 = "";
+    _line2 = "";
     //set subdetectors to see
     _subdetector1 = 1;
     _subdetector2 = 2;
@@ -336,9 +343,12 @@ void runVisualizer() {
     _sclfmodulesizex = 1;
     _sclfmodulesizey = 1;
     _sclfmodulesizez = 1;
-    //title
-    _line1 = "";
-    _line2 = "";
+    //beam pipe xy coordinates
+    _pipexcoord = 0;
+    _pipeycoord = 0;
+    //beam line xy coordinates
+    _linexcoord = 0;
+    _lineycoord = 0;
 //------------------------------End of ONLY NEEDED INPUTS-------------------------------//
     sortbyz( inputFileName );
     TFile *fin = TFile::Open( inputFileName.ReplaceAll(".root", "_sorted.root") );
@@ -408,4 +418,3 @@ void runVisualizer() {
     gSystem->Exec(TString("convert "+_outputFileName+".gif -rotate 90 "+_outputFileName+"_rotated.gif"));
     cout << "images rotated." << endl;
 }
-
