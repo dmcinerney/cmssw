@@ -122,12 +122,12 @@ dbOutputTemplate= """
 visualizationTrackerTemplate= """
 #include ".oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation/scripts/visualizationTracker.C"
 
-void visualizationTracker(){
+void TkAl3DVisualization_.oO[name]Oo.(){
             //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TString inputFileName = ".oO[inputFileName]Oo.";
+    TString inputFileName = ".oO[outputFile]Oo.";
     //output file name
-    string outputFileName = "animation";
+    string outputFileName = ".oO[name]Oo..Visualization";
     //title
     string line1 = "";
     string line2 = "";
