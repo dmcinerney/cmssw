@@ -17,6 +17,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <assert.h>
 using namespace std;
 //using namespace ROOT::Math;
 
@@ -57,7 +58,20 @@ bool iszilessthanzj(int i, int j)
 void sortbyz(TString infile)
 {
     TFile *f = TFile::Open(infile);
+    if(f == 0) {
+        cout << "***Exception Thrown: null input file***" << endl;
+        assert(0);
+    }
     t = (TTree*)f->Get("alignTree");
+    if(t == 0){
+        cout << "***Exception Thrown: tree is null***" << endl;
+        assert(0);
+    }
+    if(t->GetEntries() == 0) {
+        cout << "***Exception Thrown: tree has no entries***" << endl;
+        assert(0);
+    }
+
     t->SetBranchAddress("z", &zval);
 
     TString outfile = infile.ReplaceAll(".root","_sorted.root");
