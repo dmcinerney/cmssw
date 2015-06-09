@@ -429,11 +429,11 @@ void runVisualizer(TString input,
     }
     delete fin;
 
-    gSystem->Exec(TString(getGifMergeCommand(0, start1, start2, _i)));
-    //gSystem->Exec(TString(getConvertCommand(0, start1, start2, _i)));
+    //gSystem->Exec(TString(getGifMergeCommand(0, start1, start2, _i)));
+    gSystem->Exec(TString(getConvertCommand(0, start1, start2, _i)));
     cout << "images merged." << endl;
-    //gSystem->Exec(TString("convert "+_outputFileName+".gif -rotate 90 "+_outputFileName+"_rotated.gif"));
-    //cout << "images rotated." << endl;
+    gSystem->Exec(TString("convert "+_outputFileName+".gif -rotate 90 "+_outputFileName+"_rotated.gif"));
+    cout << "images rotated." << endl;
 }
 
 void runVisualizer() {

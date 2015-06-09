@@ -117,3 +117,55 @@ dbOutputTemplate= """
     }
 """
 
+######################################################################
+######################################################################
+visualizationTrackerTemplate= """
+#include ".oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation/scripts/visualizationTracker.C"
+
+void visualizationTracker(){
+            //------------------------------ONLY NEEDED INPUTS-------------------------------//
+//------Tree Read In--------
+    TString inputFileName = ".oO[inputFileName]Oo.";
+    //output file name
+    string outputFileName = "animation";
+    //title
+    string line1 = "";
+    string line2 = "";
+    //set subdetectors to see
+    int subdetector1 = 1;
+    int subdetector2 = 2;
+    //translation scale factor
+    int sclftr = 50;
+    //rotation scale factor
+    int sclfrt = 1;
+    //module size scale factor
+    float sclfmodulesizex = 1;
+    float sclfmodulesizey = 1;
+    float sclfmodulesizez = 1;
+    //beam pipe radius
+    float piperadius = 2.25;
+    //beam pipe xy coordinates
+    float pipexcoord = 0;
+    float pipeycoord = 0;
+    //beam line xy coordinates
+    float linexcoord = 0;
+    float lineycoord = 0;
+//------------------------------End of ONLY NEEDED INPUTS-------------------------------//
+    runVisualizer(inputFileName,
+                    outputFileName,
+                    line1,
+                    line2,
+                    subdetector1,
+                    subdetector2,
+                    sclftr,
+                    sclfrt,
+                    sclfmodulesizex,
+                    sclfmodulesizey,
+                    sclfmodulesizez,
+                    piperadius,
+                    pipexcoord,
+                    pipeycoord,
+                    linexcoord,
+                    lineycoord );
+}
+"""
