@@ -321,36 +321,52 @@ string getConvertCommand(int start, int breakspot1, int breakspot2, int end) {
     return str;
 }
 
-void runVisualizer() {
+void runVisualizer(TString input,
+                    string output,
+                    string line1,
+                    string line2,
+                    int subdetector1,
+                    int subdetector2,
+                    int sclftr,
+                    int sclfrt,
+                    float sclfmodulesizex,
+                    float sclfmodulesizey,
+                    float sclfmodulesizez,
+                    float piperadius,
+                    float pipexcoord,
+                    float pipeycoord,
+                    float linexcoord,
+                    float lineycoord ) {
     gErrorIgnoreLevel = kError;
-    //------------------------------ONLY NEEDED INPUTS-------------------------------//
+
 //------Tree Read In--------
-    TString inputFileName = "~/radial_vs_normal.Comparison_commonTracker.root";
+    TString inputFileName = input;
     //output file name
-    _outputFileName = "animation";
+    _outputFileName = output;
     //title
-    _line1 = "";
-    _line2 = "";
+    _line1 = line1;
+    _line2 = line2;
     //set subdetectors to see
-    _subdetector1 = 1;
-    _subdetector2 = 2;
+    _subdetector1 = subdetector1;
+    _subdetector2 = subdetector2;
     //translation scale factor
-    _sclftr = 300;
+    _sclftr = sclftr;
     //rotation scale factor
-    _sclfrt = 1;
+    _sclfrt = sclfrt;
     //module size scale factor
-    _sclfmodulesizex = 1;
-    _sclfmodulesizey = 1;
-    _sclfmodulesizez = 1;
+    _sclfmodulesizex = sclfmodulesizex;
+    _sclfmodulesizey = sclfmodulesizey;
+    _sclfmodulesizez = sclfmodulesizez;
     //beam pipe radius
-    _piperadius = 2.25;
+    _piperadius = piperadius;
     //beam pipe xy coordinates
-    _pipexcoord = 0;
-    _pipeycoord = 0;
+    _pipexcoord = pipexcoord;
+    _pipeycoord = pipeycoord;
     //beam line xy coordinates
-    _linexcoord = 0;
-    _lineycoord = 0;
-//------------------------------End of ONLY NEEDED INPUTS-------------------------------//
+    _linexcoord = linexcoord;
+    _lineycoord = lineycoord;
+
+
     sortbyz( inputFileName );
     TFile *fin = TFile::Open( inputFileName.ReplaceAll(".root", "_sorted.root") );
     _line3 = Form("Translational Scale Factor: %i",_sclftr);
@@ -413,9 +429,56 @@ void runVisualizer() {
     }
     delete fin;
 
-    //gSystem->Exec(TString(getGifMergeCommand(0, start1, start2, _i)));
-    gSystem->Exec(TString(getConvertCommand(0, start1, start2, _i)));
+    gSystem->Exec(TString(getGifMergeCommand(0, start1, start2, _i)));
+    //gSystem->Exec(TString(getConvertCommand(0, start1, start2, _i)));
     cout << "images merged." << endl;
-    gSystem->Exec(TString("convert "+_outputFileName+".gif -rotate 90 "+_outputFileName+"_rotated.gif"));
-    cout << "images rotated." << endl;
+    //gSystem->Exec(TString("convert "+_outputFileName+".gif -rotate 90 "+_outputFileName+"_rotated.gif"));
+    //cout << "images rotated." << endl;
+}
+
+void runVisualizer() {
+        //------------------------------ONLY NEEDED INPUTS-------------------------------//
+//------Tree Read In--------
+    TString inputFileName = "~/normal_vs_test.Comparison_commonTracker.root";
+    //output file name
+    string outputFileName = "animation";
+    //title
+    string line1 = "";
+    string line2 = "";
+    //set subdetectors to see
+    int subdetector1 = 1;
+    int subdetector2 = 2;
+    //translation scale factor
+    int sclftr = 50;
+    //rotation scale factor
+    int sclfrt = 1;
+    //module size scale factor
+    float sclfmodulesizex = 1;
+    float sclfmodulesizey = 1;
+    float sclfmodulesizez = 1;
+    //beam pipe radius
+    float piperadius = 2.25;
+    //beam pipe xy coordinates
+    float pipexcoord = 0;
+    float pipeycoord = 0;
+    //beam line xy coordinates
+    float linexcoord = 0;
+    float lineycoord = 0;
+//------------------------------End of ONLY NEEDED INPUTS-------------------------------//
+    runVisualizer(inputFileName,
+                    outputFileName,
+                    line1,
+                    line2,
+                    subdetector1,
+                    subdetector2,
+                    sclftr,
+                    sclfrt,
+                    sclfmodulesizex,
+                    sclfmodulesizey,
+                    sclfmodulesizez,
+                    piperadius,
+                    pipexcoord,
+                    pipeycoord,
+                    linexcoord,
+                    lineycoord );
 }
