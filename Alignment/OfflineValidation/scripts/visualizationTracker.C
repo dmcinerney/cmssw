@@ -1,3 +1,5 @@
+#include "TText.h"
+#include "TPaveText.h"
 #include "TGeoManager.h"
 #include "TGeoMaterial.h"
 #include "TH1F.h"

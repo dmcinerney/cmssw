@@ -120,12 +120,12 @@ dbOutputTemplate= """
 ######################################################################
 ######################################################################
 visualizationTrackerTemplate= """
-#include ".oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation/scripts/visualizationTracker.C"
-
+#include ".oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation/scripts/visualizationTracker.C" /*
+: ' */
 void TkAl3DVisualization_.oO[name]Oo.(){
             //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TString inputFileName = ".oO[outputFile]Oo.";
+    TString inputFileName = "root://eoscms//eos/cms/store/caf/user/$USER/.oO[eosdir]Oo./.oO[outputFile]Oo.";
     //output file name
     string outputFileName = ".oO[name]Oo..Visualization";
     //title
@@ -168,4 +168,5 @@ void TkAl3DVisualization_.oO[name]Oo.(){
                     linexcoord,
                     lineycoord );
 }
+// '
 """

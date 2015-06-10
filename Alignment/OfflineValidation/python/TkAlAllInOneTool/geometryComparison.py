@@ -116,9 +116,10 @@ class GeometryComparison(GenericValidation):
                      "/scripts/GeometryComparisonPlotter.h .\n"
                      "rfcp .oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation"
                      "/scripts/GeometryComparisonPlotter.cc .\n"
-                     "root -b -q 'comparisonScript.C+(\""
+                     "#root -b -q 'comparisonScript.C+(\""
                      ".oO[name]Oo..Comparison_common"+name+".root\",\""
                      "./\")'\n"
+		     "rfcp "+path+"/TkAl3DVisualization_.oO[name]Oo..C .\n"
 		     "root -l -b -q TkAl3DVisualization_.oO[name]Oo..C+\n")
                 if  self.copyImages:
                    repMap["runComparisonScripts"] += \
@@ -202,9 +203,9 @@ class GeometryComparison(GenericValidation):
                         ".Comparison_common"+name+"_Images/ArrowPlots\"\n")
 		   repMap["runComparisonScripts"] += \
                        ("find . "
-                        "-maxdepth 1 -name \".oO[name]Oo..Visualization.gif\" -print | xargs -I {} bash "
+                        "-maxdepth 1 -name \".oO[name]Oo..Visualization_rotated.gif\" -print | xargs -I {} bash "
                         "-c \"rfcp {} .oO[datadir]Oo./.oO[name]Oo."
-                        ".Comparison_common"+name+"_Images\"\n")
+                        ".Comparison_common"+name+"_Images\.oO[name]Oo..Visualization.gif\n")
 
                 resultingFile = replaceByMap(("/store/caf/user/$USER/.oO[eosdir]Oo./compared%s_"
                                               ".oO[name]Oo..root"%name), repMap)
@@ -231,7 +232,7 @@ class GeometryComparison(GenericValidation):
 
         #~ print configTemplates.scriptTemplate
         scripts = {scriptName: replaceByMap( configTemplates.scriptTemplate, repMap ),\
-		 replaceByMap("TkAl3DVisualization_.oO[name]Oo.", repMap ): replaceByMap(configTemplates.visualizationTrackerTemplate, repMap ) }
+		 replaceByMap("TkAl3DVisualization_.oO[name]Oo..C", repMap ): replaceByMap(configTemplates.visualizationTrackerTemplate, repMap ) }
         return GenericValidation.createScript(self, scripts, path)
 
     def createCrabCfg(self, path):
