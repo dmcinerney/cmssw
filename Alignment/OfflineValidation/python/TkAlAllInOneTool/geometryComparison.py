@@ -60,7 +60,9 @@ class GeometryComparison(GenericValidation):
                                  "ROOTGeometry.root"),
             "referenceGeometry": "IDEAL", # will be replaced later
                                           #  if not compared to IDEAL
-            "reference": referenceName
+            "reference": referenceName,
+            "referenceTitle": self.referenceAlignment.title,
+	    "alignmentTitle": self.alignmentToValidate.title
             })
         if not referenceName == "IDEAL":
             repMap["referenceGeometry"] = (".oO[reference]Oo."
@@ -116,7 +118,7 @@ class GeometryComparison(GenericValidation):
                      "/scripts/GeometryComparisonPlotter.h .\n"
                      "rfcp .oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation"
                      "/scripts/GeometryComparisonPlotter.cc .\n"
-                     "#root -b -q 'comparisonScript.C+(\""
+                     "root -b -q 'comparisonScript.C+(\""
                      ".oO[name]Oo..Comparison_common"+name+".root\",\""
                      "./\")'\n"
 		     "rfcp "+path+"/TkAl3DVisualization_.oO[name]Oo..C .\n"
@@ -205,7 +207,7 @@ class GeometryComparison(GenericValidation):
                        ("find . "
                         "-maxdepth 1 -name \".oO[name]Oo..Visualization_rotated.gif\" -print | xargs -I {} bash "
                         "-c \"rfcp {} .oO[datadir]Oo./.oO[name]Oo."
-                        ".Comparison_common"+name+"_Images\.oO[name]Oo..Visualization.gif\n")
+                        ".Comparison_common"+name+"_Images/.oO[name]Oo..Visualization.gif\"\n")
 
                 resultingFile = replaceByMap(("/store/caf/user/$USER/.oO[eosdir]Oo./compared%s_"
                                               ".oO[name]Oo..root"%name), repMap)

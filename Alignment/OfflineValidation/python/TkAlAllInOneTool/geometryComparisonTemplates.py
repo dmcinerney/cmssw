@@ -129,8 +129,8 @@ void TkAl3DVisualization_.oO[name]Oo.(){
     //output file name
     string outputFileName = ".oO[name]Oo..Visualization";
     //title
-    string line1 = "";
-    string line2 = "";
+    string line1 = ".oO[alignmentTitle]Oo.";
+    string line2 = "vs. .oO[referenceTitle]Oo.";
     //set subdetectors to see
     int subdetector1 = 1;
     int subdetector2 = 2;
@@ -151,6 +151,7 @@ void TkAl3DVisualization_.oO[name]Oo.(){
     float linexcoord = 0;
     float lineycoord = 0;
 //------------------------------End of ONLY NEEDED INPUTS-------------------------------//
+    cout << "running visualizer" << endl;
     runVisualizer(inputFileName,
                     outputFileName,
                     line1,
