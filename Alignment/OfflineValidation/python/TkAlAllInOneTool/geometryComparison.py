@@ -28,8 +28,15 @@ class GeometryComparison(GenericValidation):
                                generated to create unique path names for the
                                individual validation instances.
         """
+	defaults = {
+	    "Subdetector1":"1",
+	    "Subdetector2":"2",
+	    "TranslationalScaleFactor":"50"
+            }
         mandatories = ["levels", "dbOutput"]
-        GenericValidation.__init__(self, valName, alignment, config, "compare", addMandatories = mandatories)
+        GenericValidation.__init__(self, valName, alignment, config, 
+				   "compare", addDefaults=defaults, 
+				   addMandatories = mandatories)
         if not randomWorkdirPart == None:
             self.randomWorkdirPart = randomWorkdirPart
         self.referenceAlignment = referenceAlignment

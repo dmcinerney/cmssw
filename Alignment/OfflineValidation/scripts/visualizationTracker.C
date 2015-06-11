@@ -121,8 +121,8 @@ void getBeamVisuals(TGeoManager* geom, TGeoVolume* top, float minZ, float maxZ) 
     xyaxis->AddNode(xaxis, 1, new TGeoRotation( "rtyz", 0, 90, 0));
     xyaxis->AddNode(yaxis, 1, new TGeoRotation( "rtxz", 90, 90, 0));
     
-    TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(_pipeycoord, _pipeycoord, (maxZ + minZ)/2), *new TGeoRotation());
-    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(_linexcoord, _lineycoord, (maxZ + minZ)/2), *new TGeoRotation());
+    TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(_pipeycoord, _pipeycoord, 0, *new TGeoRotation());
+    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(_linexcoord, _lineycoord, 0, *new TGeoRotation());
     //top->AddNode( pipe, 1, pipecenter);
     //top->AddNode( line, 1, linecenter);
     top->AddNode( xyaxis, 1, pipecenter);

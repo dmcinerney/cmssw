@@ -125,17 +125,17 @@ visualizationTrackerTemplate= """
 void TkAl3DVisualization_.oO[name]Oo.(){
             //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
-    TString inputFileName = "root://eoscms//eos/cms/store/caf/user/$USER/.oO[eosdir]Oo./.oO[outputFile]Oo.";
+    TString inputFileName = ".oO[outputFile]Oo.";
     //output file name
     string outputFileName = ".oO[name]Oo..Visualization";
     //title
     string line1 = ".oO[alignmentTitle]Oo.";
     string line2 = "vs. .oO[referenceTitle]Oo.";
     //set subdetectors to see
-    int subdetector1 = 1;
-    int subdetector2 = 2;
+    int subdetector1 = .oO[Subdetector1]Oo.;
+    int subdetector2 = .oO[Subdetector2]Oo.;
     //translation scale factor
-    int sclftr = 50;
+    int sclftr = .oO[TranslationalScaleFactor]Oo.;
     //rotation scale factor
     int sclfrt = 1;
     //module size scale factor
