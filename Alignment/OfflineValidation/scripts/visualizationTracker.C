@@ -121,8 +121,8 @@ void getBeamVisuals(TGeoManager* geom, TGeoVolume* top, float minZ, float maxZ) 
     xyaxis->AddNode(xaxis, 1, new TGeoRotation( "rtyz", 0, 90, 0));
     xyaxis->AddNode(yaxis, 1, new TGeoRotation( "rtxz", 90, 90, 0));
     
-    TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(_pipeycoord, _pipeycoord, 0, *new TGeoRotation());
-    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(_linexcoord, _lineycoord, 0, *new TGeoRotation());
+    TGeoCombiTrans * pipecenter = new TGeoCombiTrans( *new TGeoTranslation(_pipexcoord, _pipeycoord, 0), *new TGeoRotation());
+    //TGeoCombiTrans * linecenter = new TGeoCombiTrans( *new TGeoTranslation(_linexcoord, _lineycoord, 0), *new TGeoRotation());
     //top->AddNode( pipe, 1, pipecenter);
     //top->AddNode( line, 1, linecenter);
     top->AddNode( xyaxis, 1, pipecenter);
@@ -138,10 +138,10 @@ void getModule(TGeoManager* geom, TGeoVolume* top, TGeoVolume* mod){
     refMod->SetFillColor( 13 );
     TGeoVolume *curMod = geom->MakeBox( "curMod", Al, 0.5*_surWidth*_sclfmodulesizex, 0.5*_surLength*_sclfmodulesizey, 0.30*_sclfmodulesizez );
 
-    if ((_xVal < 0)&&(_zVal>=0)) curMod->SetLineColor( kRed );
-    if ((_xVal < 0)&&(_zVal<0)) curMod->SetLineColor( kGreen );
-    if ((_xVal >= 0)&&(_zVal>=0)) curMod->SetLineColor( kBlue );
-    if ((_xVal >= 0)&&(_zVal<0)) curMod->SetLineColor( kMagenta );
+    if ((_yVal < 0)&&(_zVal>=0)) curMod->SetLineColor( kRed );
+    if ((_yVal < 0)&&(_zVal<0)) curMod->SetLineColor( kGreen );
+    if ((_yVal >= 0)&&(_zVal>=0)) curMod->SetLineColor( kBlue );
+    if ((_yVal >= 0)&&(_zVal<0)) curMod->SetLineColor( kMagenta );
     refMod->SetLineColor( 14 );
     //curMod->SetLineColor(kBlue);
     //refMod->SetLineColor(kRed);
@@ -171,7 +171,7 @@ bool isRightSubDet() {
     return (_sublevel == _subdetector1 || _sublevel == _subdetector2);
 }
 
-int visualizationTracker(float minZ, float maxZ, float minY, float maxY, float theta, float phi){
+int visualizationTracker(float minZ, float maxZ, float minX, float maxX, float theta, float phi){
     gSystem->Load("libGeom");
 //++++++++++++++++++++ Set up stuff ++++++++++++++++++++//
     TGeoManager *geom = new TGeoManager("simple1", "Simple geometry");
@@ -186,7 +186,7 @@ int visualizationTracker(float minZ, float maxZ, float minY, float maxY, float t
     int count = 0;
     for (int i = 0; i < _nEntries; ++i){
         _inTree->GetEntry(i);
-        if (isRightSubDet()&&(_zVal >= minZ && _zVal < maxZ)&&(_yVal >= minY && _yVal < maxY)/*&&(_rVal <= 12)&&(_rVal >=8)*/){
+        if (isRightSubDet()&&(_zVal >= minZ && _zVal < maxZ)&&(_xVal >= minX && _xVal < maxX)/*&&(_rVal <= 12)&&(_rVal >=8)*/){
             char modName[192];
             sprintf(modName, "testModule%i", i);
             TGeoVolume* testMod = geom->MakeBox( modName, Vacuum, 90., 90., 40. );
@@ -261,14 +261,14 @@ int visualizationTracker(float minZ, float maxZ, float minY, float maxY, float t
 }
 
 //gets minimum and maximum values of Z and Y in the specified subdetectors
-void getMinMax(float & minZ, float & maxZ, float & minY, float & maxY) {
+void getMinMax(float & minZ, float & maxZ, float & minX, float & maxX) {
     int i = 0;
     while(i < _nEntries){
         _inTree->GetEntry(i);
         if(isRightSubDet()) {
             _inTree->GetEntry(i);
-            maxY = _yVal;
-            minY = _yVal;
+            maxX = _xVal;
+            minX = _xVal;
             maxZ = _zVal;
             minZ = _zVal;
             break;
@@ -278,11 +278,11 @@ void getMinMax(float & minZ, float & maxZ, float & minY, float & maxY) {
     while ( i < _nEntries ) {
         _inTree->GetEntry(i);
         if (isRightSubDet()) {
-            if( _yVal > maxY ) {
-                maxY = _yVal;
+            if( _xVal > maxX ) {
+                maxX = _xVal;
             }
-            if( _yVal < minY ) {
-                minY = _yVal;
+            if( _xVal < minX ) {
+                minX = _xVal;
             }
             if( _zVal > maxZ ) {
                 maxZ = _zVal;
@@ -293,8 +293,8 @@ void getMinMax(float & minZ, float & maxZ, float & minY, float & maxY) {
         }
         ++i;
     }
-    cout << minY << endl;
-    cout << maxY << endl;
+    cout << minX << endl;
+    cout << maxX << endl;
     cout << minZ << endl;
     cout << maxZ << endl;
 }
@@ -416,16 +416,16 @@ void runVisualizer(TString input,
 //_inTree->SetBranchAddress("useid", &_useid);
     _inTree->SetBranchAddress("identifiers", &_identifiers);
 
-    float minZ, maxZ, minY, maxY;
+    float minZ, maxZ, minX, maxX;
     int zpos;
     int numincrements;
-    getMinMax(minZ, maxZ, minY, maxY);
+    getMinMax(minZ, maxZ, minX, maxX);
     
     gSystem->mkdir("images");
 
     _i = 0;
     for (int i = 0; i < 90; i+=1, _i++) {
-        visualizationTracker(minZ, maxZ, minY, maxY, i, 0);
+        visualizationTracker(minZ, maxZ, minX, maxX, i, 90);
     }
     
     numincrements = 12;
@@ -434,14 +434,14 @@ void runVisualizer(TString input,
     length = (maxZ - minZ) / numincrements;
     for(int i = numincrements-1; i >= 0; i--) {
         zpos = minZ + i*length;
-        if(visualizationTracker(zpos, zpos+length, minY, maxY, 90, 0) == 0) {
+        if(visualizationTracker(zpos, zpos+length, minX, maxX, 90, 90) == 0) {
             _i++;
         }
     }
     
     int start2 = _i;
     for (int i = 90; i >= 0; i-=1, _i++){
-        visualizationTracker(minZ, maxZ, (minY + maxY) / 2 - 3, (minY + maxY) / 2 + 1, i, 0);
+        visualizationTracker(minZ, maxZ, (minX + maxX) / 2 - 3, (minX + maxX) / 2 + 1, i, 90);
     }
     delete fin;
 

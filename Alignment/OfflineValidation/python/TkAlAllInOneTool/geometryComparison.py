@@ -240,8 +240,9 @@ class GeometryComparison(GenericValidation):
                                  )
 
         #~ print configTemplates.scriptTemplate
-        scripts = {scriptName: replaceByMap( configTemplates.scriptTemplate, repMap ),\
-		 replaceByMap("TkAl3DVisualization_.oO[name]Oo..C", repMap ): replaceByMap(configTemplates.visualizationTrackerTemplate, repMap ) }
+        scripts = {scriptName: replaceByMap( configTemplates.scriptTemplate, repMap )}
+	files = {replaceByMap("TkAl3DVisualization_.oO[name]Oo..C", repMap ): replaceByMap(configTemplates.visualizationTrackerTemplate, repMap )}
+	self.createFiles(files, path)
         return GenericValidation.createScript(self, scripts, path)
 
     def createCrabCfg(self, path):

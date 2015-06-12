@@ -120,8 +120,7 @@ dbOutputTemplate= """
 ######################################################################
 ######################################################################
 visualizationTrackerTemplate= """
-#include ".oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation/scripts/visualizationTracker.C" /*
-: ' */
+#include ".oO[CMSSW_BASE]Oo./src/Alignment/OfflineValidation/scripts/visualizationTracker.C"
 void TkAl3DVisualization_.oO[name]Oo.(){
             //------------------------------ONLY NEEDED INPUTS-------------------------------//
 //------Tree Read In--------
@@ -169,5 +168,4 @@ void TkAl3DVisualization_.oO[name]Oo.(){
                     linexcoord,
                     lineycoord );
 }
-// '
 """
